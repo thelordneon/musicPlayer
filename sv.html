@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screw - Pitch & Tempo Shifter (Fixed)</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/gh/soundtouchjs/soundtouch-js/dist/soundtouch.js"></script>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+
+  <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-4 text-center">Screw</h1>
+
+    <!-- File input -->
+    <label class="block w-full bg-blue-600 text-white text-center py-3 rounded-lg cursor-pointer mb-3">
+      Browse Audio File
+      <input type="file" id="file-input" accept="audio/*" class="hidden">
+    </label>
+    <p id="filename" class="text-center text-gray-600 mb-4"></p>
+
+    <!-- Controls -->
+    <div class="flex justify-center space-x-4 mb-4">
+      <button id="play-pause" class="px-4 py-2 bg-gray-200 rounded-lg" disabled>Play</button>
+      <button id="stop" class="px-4 py-2 bg-gray-200 rounded-lg" disabled>Stop</button>
+    </div>
+
+    <!-- Pitch -->
+    <div class="mb-4">
+      <label class="block text-gray-700 mb-1">Pitch</label>
+      <input type="range" id="pitch" min="0.5" max="2" step="0.01" value="1" class="w-full">
+      <p id="pitch-value" class="text-center mt-1">1.00x</p>
+    </div>
+
+    <!-- Tempo -->
+    <div>
+      <label class="block text-gray-700 mb-1">Tempo</label>
+      <input type="range" id="tempo" min="0.5" max="2" step="0.01" value="1" class="w-full">
+      <p id="tempo-value" class="text-center mt-1">1.00x</p>
+    </div>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById("file-input");
+    const filename = document.getElementById("filename");
+    const playPauseBtn = document.getElementById("play-pause");
+    const stopBtn = document.getElementById("stop");
+    const pitchSlider = document.getElementById("pitch");
+    const tempoSlider = document.getElementById("tempo");
+    const pitchValue = document.getElementById("pitch-value");
+    const tempoValue = document.getElementById("tempo-value");
+
+    let audioCtx, sourceBuffer, decodedBuffer, filter, processor;
+    let soundTouch, playing = false;
+
+    fileInput.addEventListener("change", async e => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      filename.textContent = file.name;
+
+      // Reset context
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      soundTouch = new soundtouch.SoundTouch(audioCtx.sampleRate);
+
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        decodedBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+        // Source
+        sourceBuffer = new soundtouch.WebAudioBufferSource(decodedBuffer);
+        filter = new soundtouch.SimpleFilter(sourceBuffer, soundTouch);
+
+        // Processor node
+        processor = audioCtx.createScriptProcessor(4096, 2, 2);
+        processor.onaudioprocess = e => {
+          const l = e.outputBuffer.getChannelData(0);
+          const r = e.outputBuffer.getChannelData(1);
+          let frames = filter.extract(l.length);
+          if (frames === 0) stopAudio();
+          else {
+            l.set(filter.left);
+            r.set(filter.right);
+          }
+        };
+
+        playPauseBtn.disabled = false;
+        stopBtn.disabled = false;
+      } catch (err) {
+        console.error("Decode error:", err);
+        filename.textContent = "❌ Unsupported file";
+      }
+    });
+
+    playPauseBtn.addEventListener("click", () => {
+      if (!playing) startAudio();
+      else pauseAudio();
+    });
+
+    stopBtn.addEventListener("click", () => stopAudio());
+
+    function startAudio() {
+      if (!processor) return;
+      processor.connect(audioCtx.destination);
+      playing = true;
+      playPauseBtn.textContent = "Pause";
+      audioCtx.resume();
+    }
+
+    function pauseAudio() {
+      if (!processor) return;
+      processor.disconnect();
+      playing = false;
+      playPauseBtn.textContent = "Play";
+    }
+
+    function stopAudio() {
+      pauseAudio();
+      sourceBuffer.position = 0; // reset position
+    }
+
+    // Pitch/Tempo controls
+    pitchSlider.addEventListener("input", () => {
+      const val = parseFloat(pitchSlider.value);
+      soundTouch.pitch = val;
+      pitchValue.textContent = val.toFixed(2) + "x";
+    });
+
+    tempoSlider.addEventListener("input", () => {
+      const val = parseFloat(tempoSlider.value);
+      soundTouch.tempo = val;
+      tempoValue.textContent = val.toFixed(2) + "x";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SoundTouch Test</title>
+  <script src="https://cdn.jsdelivr.net/gh/corbanbrook/dsp.js/dsp.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/also/soundtouch-js/soundtouch.js"></script>
+</head>
+<body>
+  <h2>Browse and Play</h2>
+  <input type="file" id="file-input" accept="audio/*"><br><br>
+  <button id="play">Play</button>
+  <button id="stop">Stop</button>
+
+  <script>
+    let audioCtx, buffer, source, filter, processor, soundTouch;
+    let playing = false;
+
+    const fileInput = document.getElementById("file-input");
+    const playBtn   = document.getElementById("play");
+    const stopBtn   = document.getElementById("stop");
+
+    fileInput.addEventListener("change", async e => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      soundTouch = new soundtouch.SoundTouch(audioCtx.sampleRate);
+
+      const arrBuf = await file.arrayBuffer();
+      buffer = await audioCtx.decodeAudioData(arrBuf);
+
+      // Prepare filter and processor
+      source = new soundtouch.WebAudioBufferSource(buffer);
+      filter = new soundtouch.SimpleFilter(source, soundTouch);
+
+      processor = audioCtx.createScriptProcessor(4096, 2, 2);
+      processor.onaudioprocess = e => {
+        const l = e.outputBuffer.getChannelData(0);
+        const r = e.outputBuffer.getChannelData(1);
+
+        const frames = filter.extract(l.length);
+        if (frames === 0) {
+          stopAudio();
+        } else {
+          l.set(filter.left);
+          r.set(filter.right);
+        }
+      };
+
+      console.log("✅ File ready:", file.name);
+    });
+
+    playBtn.addEventListener("click", async () => {
+      if (!buffer || !processor) return;
+      await audioCtx.resume(); // needed for autoplay policies
+
+      if (!playing) {
+        processor.connect(audioCtx.destination);
+        playing = true;
+        playBtn.textContent = "Pause";
+      } else {
+        processor.disconnect();
+        playing = false;
+        playBtn.textContent = "Play";
+      }
+    });
+
+    stopBtn.addEventListener("click", () => stopAudio());
+
+    function stopAudio() {
+      if (processor) processor.disconnect();
+      if (source) source.position = 0;
+      playing = false;
+      playBtn.textContent = "Play";
+    }
+  </script>
+</body>
+</html>
