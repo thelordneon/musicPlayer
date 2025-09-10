@@ -64,3 +64,20 @@ If you spot an issue or want to improve the code:
 * [MDN Web Docs](https://developer.mozilla.org/) for Web Audio API references.
 * [jsmediatags](https://github.com/aadsm/jsmediatags) for metadata parsing.
 
+## 📸 Preview
+### Music Player Preview: Different Songs & Speed/Pitch Control
+
+<table>
+  <tr>
+    <td><img src="assets/screenshots/preview_1.png" alt="Preview 1" width="300"/></td>
+    <td><img src="assets/screenshots/preview_2.png" alt="Preview 2" width="300"/></td>
+    <td><img src="assets/screenshots/preview_3.png" alt="Preview 3" width="300"/></td>
+    <td><img src="assets/screenshots/preview_4.png" alt="Preview 4" width="300"/></td>
+  </tr>
+</table>
+
+## 📜 License
+
+## License
+
+This project is licensed under the MIT License - see the [licenses/MIT-LICENSE.txt](licenses/MIT-LICENSE.txt) file for details.
