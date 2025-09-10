@@ -43,3 +43,24 @@ Community contributions are welcome to refine and fix issues.
 1. Clone the repo:
    ```bash
    git clone https://github.com/your-username/musicPlayer.git
+2. Open index.html in your browser.
+3. Drag & drop your audio files into the player or load them via the file picker.
+
+## 🤝 Contributing
+
+Bugs are expected — **and that’s okay** 🎉
+
+If you spot an issue or want to improve the code:
+
+1. Fork the repo
+2. Create a branch (`fix-bug-name`)
+3. Submit a Pull Request
+
+---
+
+## 🙌 Acknowledgements
+
+* Inspiration from various open-source audio player projects.
+* [MDN Web Docs](https://developer.mozilla.org/) for Web Audio API references.
+* [jsmediatags](https://github.com/aadsm/jsmediatags) for metadata parsing.
+
