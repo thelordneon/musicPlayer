@@ -243,107 +243,95 @@ body {
     height: 24px;
     margin-left: 0;
 }
-/* --- [START] FIXED CSS FOR SPEED CONTROLS --- */
+
+/* --- [START] FINAL FIXED CSS FOR SPEED CONTROLS --- */
 
 /* Container for the whole speed control section */
 .speed-controls {
-    background: rgba(0, 0, 0, 0.35);
-    border-radius: 12px;
-    margin-top: 16px;
-    max-height: 0;
-    /* hidden by default */
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  margin-top: 16px;
+  max-height: 0;          /* hidden by default */
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out;
 }
 
-/* Expanded state (when "Speed" button is toggled) */
 .speed-controls.expanded {
-    max-height: 100px;
-    /* enough height for content */
-    opacity: 1;
-    padding: 8px 16px;
+  max-height: 100px;      /* enough height for content */
+  opacity: 1;
+  padding: 8px 16px;
 }
 
-/* Inner flex container for - [slider] + [value] */
+/* Layout for - [slider] + [value] */
 .speed-control-inner {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    /* everything aligned from left */
-    gap: 10px;
-    /* space between elements */
-    width: 100%;
-    /* take full row width */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
 }
 
-/* Buttons for - and + */
+/* - / + buttons */
 .speed-adjust-btn {
-    display: grid;
-    /* center the +/- text */
-    place-items: center;
-    background-color: rgba(0, 0, 0, 0.2);
-    border: none;
-    color: var(--primary-text);
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 20px;
-    transition: background-color 0.2s;
-    flex-shrink: 0;
-    /* never shrink buttons */
-    padding: 0;
+  display: grid;
+  place-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: none;
+  color: var(--primary-text);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  transition: background-color 0.2s;
+  flex-shrink: 0;   /* buttons never shrink */
+  padding: 0;
 }
 
 .speed-adjust-btn:hover {
-    background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 /* Slider (progress bar for speed) */
 .speed-control-inner input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-    flex-grow: 1;
-    /* expand to fill available space */
-    flex-shrink: 1;
-    /* allow shrinking on smaller screens */
-    min-width: 0;
-    /* prevent pushing layout to the right */
-    height: 4px;
-    border-radius: 2px;
-    background: linear-gradient(to right,
-            #a4a232 var(--fill-percent, 50%),
-            #555444 var(--fill-percent, 50%));
-    outline: none;
-    transition: background 0.1s;
+  -webkit-appearance: none;
+  appearance: none;
+  flex-grow: 1;       /* expand to take remaining space */
+  flex-shrink: 0;     /* ❌ no shrinking (fixes collapse issue) */
+  min-width: 120px;   /* ✅ safe minimum width even on mobile */
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to right,
+    #a4a232 var(--fill-percent, 50%),
+    #555444 var(--fill-percent, 50%)
+  );
+  outline: none;
+  transition: background 0.1s;
 }
 
-/* Slider thumb (the small handle) */
+/* Slider thumb */
 .speed-control-inner input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 3px;
-    height: 20px;
-    background: #a4a232;
-    border-radius: 2px;
-    cursor: pointer;
-    border: none;
-    margin-top: -8px;
-    /* centers the thumb visually */
+  -webkit-appearance: none;
+  appearance: none;
+  width: 3px;
+  height: 20px;
+  background: #a4a232;
+  border-radius: 2px;
+  cursor: pointer;
+  border: none;
+  margin-top: -8px;
 }
 
-/* Speed value display (e.g., "1.00x") */
+/* Speed value text (e.g., 1.00x) */
 .speed-control-inner .value-display {
-    font-size: 0.85rem;
-    width: 50px;
-    /* fixed width for alignment */
-    text-align: right;
-    /* aligns numbers neatly */
-    color: var(--primary-text);
-    font-weight: 500;
-    flex-shrink: 0;
-    /* don’t shrink this */
+  font-size: 0.85rem;
+  width: 50px;          /* fixed width for neat alignment */
+  text-align: right;
+  color: var(--primary-text);
+  font-weight: 500;
+  flex-shrink: 0;       /* don’t let it shrink */
 }
 
-/* --- [END] FIXED CSS FOR SPEED CONTROLS --- */
+/* --- [END] FINAL FIXED CSS FOR SPEED CONTROLS --- */
