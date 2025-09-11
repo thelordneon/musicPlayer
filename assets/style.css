@@ -243,32 +243,44 @@ body {
     height: 24px;
     margin-left: 0;
 }
+/* --- [START] FIXED CSS FOR SPEED CONTROLS --- */
 
-/* --- [START] MODIFIED CSS FOR SPEED CONTROLS --- */
+/* Container for the whole speed control section */
 .speed-controls {
     background: rgba(0, 0, 0, 0.35);
     border-radius: 12px;
     margin-top: 16px;
     max-height: 0;
+    /* hidden by default */
     opacity: 0;
     overflow: hidden;
     transition: max-height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out;
 }
 
+/* Expanded state (when "Speed" button is toggled) */
 .speed-controls.expanded {
     max-height: 100px;
+    /* enough height for content */
     opacity: 1;
     padding: 8px 16px;
 }
 
+/* Inner flex container for - [slider] + [value] */
 .speed-control-inner {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
+    /* everything aligned from left */
     gap: 10px;
+    /* space between elements */
+    width: 100%;
+    /* take full row width */
 }
 
+/* Buttons for - and + */
 .speed-adjust-btn {
     display: grid;
+    /* center the +/- text */
     place-items: center;
     background-color: rgba(0, 0, 0, 0.2);
     border: none;
@@ -280,6 +292,7 @@ body {
     font-size: 20px;
     transition: background-color 0.2s;
     flex-shrink: 0;
+    /* never shrink buttons */
     padding: 0;
 }
 
@@ -287,21 +300,26 @@ body {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
+/* Slider (progress bar for speed) */
 .speed-control-inner input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
-    /* THIS IS THE KEY FIX: 'flex: 1' is the most robust way 
-       to make the slider automatically fill all remaining space. */
-    flex: 1;
-    min-width: 80px;
-    /* A safe minimum width for very small screens */
+    flex-grow: 1;
+    /* expand to fill available space */
+    flex-shrink: 1;
+    /* allow shrinking on smaller screens */
+    min-width: 0;
+    /* prevent pushing layout to the right */
     height: 4px;
     border-radius: 2px;
-    background: linear-gradient(to right, #a4a232 var(--fill-percent, 50%), #555444 var(--fill-percent, 50%));
+    background: linear-gradient(to right,
+            #a4a232 var(--fill-percent, 50%),
+            #555444 var(--fill-percent, 50%));
     outline: none;
     transition: background 0.1s;
 }
 
+/* Slider thumb (the small handle) */
 .speed-control-inner input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -312,15 +330,20 @@ body {
     cursor: pointer;
     border: none;
     margin-top: -8px;
+    /* centers the thumb visually */
 }
 
+/* Speed value display (e.g., "1.00x") */
 .speed-control-inner .value-display {
     font-size: 0.85rem;
-    min-width: 45px;
+    width: 50px;
+    /* fixed width for alignment */
     text-align: right;
+    /* aligns numbers neatly */
     color: var(--primary-text);
     font-weight: 500;
     flex-shrink: 0;
+    /* don’t shrink this */
 }
 
-/* --- [END] MODIFIED CSS FOR SPEED CONTROLS --- */
+/* --- [END] FIXED CSS FOR SPEED CONTROLS --- */
