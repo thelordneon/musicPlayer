@@ -1,5 +1,4 @@
-<style>
-        /* --- Basic Setup --- */
+/* --- Basic Setup --- */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
         :root {
@@ -310,7 +309,7 @@
             border-radius: 2px;
             cursor: pointer;
             border: none;
-            margin-top: -0.6px;
+            margin-top: -0.2px;
         }
 
         .speed-control-inner .value-display {
@@ -331,4 +330,3 @@
         }
 
         /* --- [END] MODIFIED CSS FOR SPEED CONTROLS --- */
-    </style>
