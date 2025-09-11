@@ -265,7 +265,6 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    justify-content: space-between;
 }
 
 .speed-adjust-btn {
@@ -291,9 +290,11 @@ body {
 .speed-control-inner input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
-    width: 100%;
-    min-width: 100px;
-    flex-grow: 1;
+    /* THIS IS THE KEY FIX: 'flex: 1' is the most robust way 
+       to make the slider automatically fill all remaining space. */
+    flex: 1;
+    min-width: 80px;
+    /* A safe minimum width for very small screens */
     height: 4px;
     border-radius: 2px;
     background: linear-gradient(to right, #a4a232 var(--fill-percent, 50%), #555444 var(--fill-percent, 50%));
@@ -310,7 +311,7 @@ body {
     border-radius: 2px;
     cursor: pointer;
     border: none;
-    margin-top: -0.2px;
+    margin-top: -8px;
 }
 
 .speed-control-inner .value-display {
